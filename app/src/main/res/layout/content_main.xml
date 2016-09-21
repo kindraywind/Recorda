@@ -13,8 +13,97 @@
     tools:context="com.octtoplus.proj.recorda.MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/helloLabel"
+                android:text="Hello World!"
+                android:textSize="40dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/byeLabel"
+                android:text="Byeeeeeeeeeeee!"
+                android:layout_below="@+id/helloLabel"
+                android:textSize="40dp"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/heheButton"
+                android:text="hehehehe"
+                android:textSize="40dp"
+                android:layout_below="@+id/byeLabel" />
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/checky1CheckBox"
+                android:text="checky1"
+                android:textSize="50dp"
+                android:checked="false"
+                android:layout_below="@+id/heheButton"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/bye2Label"
+                android:text="Byeeeeeeeeeeee!"
+                android:layout_below="@+id/checky1CheckBox"
+                android:textSize="40dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/bye3Label"
+                android:text="Byeeeeeeeeeeee!"
+                android:layout_below="@+id/bye2Label"
+                android:textSize="40dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/bye4Label"
+                android:text="Byeeeeeeeeeeee!"
+                android:layout_below="@+id/bye3Label"
+                android:textSize="40dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/bye5Label"
+                android:text="Byeeeeeeeeeeee!"
+                android:layout_below="@+id/bye4Label"
+                android:textSize="40dp"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/huhuButton"
+                android:text="huhuhu"
+                android:textSize="40dp"
+                android:layout_below="@+id/bye5Label" />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/hohoButton"
+                android:text="hohohoho"
+                android:textSize="40dp"
+                android:layout_below="@+id/huhuButton" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ahaLabel"
+                android:text="AHA"
+                android:textSize="50dp"
+                android:layout_below="@+id/hohoButton"/>
+
+
+
+        </RelativeLayout>
+
+
+    </ScrollView>
+
+
 </RelativeLayout>
