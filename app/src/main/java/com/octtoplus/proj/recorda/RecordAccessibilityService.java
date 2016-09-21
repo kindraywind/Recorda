@@ -18,6 +18,7 @@ public class RecordAccessibilityService extends AccessibilityService {
     public void onAccessibilityEvent(AccessibilityEvent accessibilityEvent) {
         final int eventType = accessibilityEvent.getEventType();
         String eventText = null;
+
         
         switch(eventType) {
             case AccessibilityEvent.TYPE_VIEW_CLICKED:
@@ -30,14 +31,19 @@ public class RecordAccessibilityService extends AccessibilityService {
         
         eventText = eventText + accessibilityEvent.getContentDescription();
         Log.i(TAG, "Event: " + eventText);
+        Log.i(TAG, "a: "+accessibilityEvent.toString());
         
     }
 
     @Override
     protected void onServiceConnected() {
         Log.i(TAG, "onServiceConnected: asdfadfasdfasdfasdfasdfdsafdsafs");
-        info.eventTypes = AccessibilityEvent.TYPE_VIEW_CLICKED | AccessibilityEvent.TYPE_VIEW_FOCUSED;
-        info.feedbackType = AccessibilityServiceInfo.FEEDBACK_HAPTIC;
+        info.eventTypes = AccessibilityEvent.TYPE_VIEW_CLICKED |
+                AccessibilityEvent.TYPE_VIEW_SCROLLED |
+                AccessibilityEvent.TYPE_VIEW_LONG_CLICKED |
+                AccessibilityEvent.TYPE_VIEW_FOCUSED |
+                AccessibilityEvent.TYPE_VIEW_SELECTED;
+        //info.feedbackType = AccessibilityServiceInfo.FEEDBACK_HAPTIC;
         info.packageNames = new String[]{"com.octtoplus.proj.recorda"};
         info.notificationTimeout = 100;
 
