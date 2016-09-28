@@ -36,23 +36,28 @@ public class RecordAccessibilityService extends AccessibilityService {
             case AccessibilityEvent.TYPE_VIEW_SCROLLED:
                 eventText = "Scrolled: ";
                 break;
+            default:
+                eventText = "Other: ";
+                break;
         }
         
         eventText = eventText + accessibilityEvent.getContentDescription();
         Log.i(TAG, "Event: " + eventText);
         Log.i(TAG, "a: "+accessibilityEvent.toString());
         toast("Event:"+ eventText);
-        logToSdCard(accessibilityEvent.toString());
+        logToSdCard(accessibilityEvent, true);
 
         
     }
 
     @Override
     protected void onServiceConnected() {
-        Log.i(TAG, "onServiceConnected: asdfadfasdfasdfasdfasdfdsafdsafs");
-        logToSdCard("Start recorda");
+        Log.i(TAG, "onServiceConnected: start");
+        //logToSdCard("Start recorda session");
 
-        info.eventTypes = AccessibilityEvent.TYPE_VIEW_CLICKED | AccessibilityEvent.TYPE_VIEW_SCROLLED;
+        info.eventTypes = AccessibilityEvent.TYPE_VIEW_CLICKED | AccessibilityEvent.TYPE_VIEW_LONG_CLICKED | AccessibilityEvent.TYPE_VIEW_FOCUSED |
+        AccessibilityEvent.TYPE_VIEW_SCROLLED | AccessibilityEvent.TYPE_VIEW_SELECTED | AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED |
+        AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED | AccessibilityEvent.TYPE_WINDOWS_CHANGED;
         info.feedbackType = AccessibilityServiceInfo.FEEDBACK_HAPTIC;
         info.packageNames = new String[]{"com.octtoplus.proj.recorda"};
         info.notificationTimeout = 100;
@@ -74,7 +79,7 @@ public class RecordAccessibilityService extends AccessibilityService {
         toast.show();
     }
 
-    public void logToSdCard(String textToBeLogged) {
+    public void logToSdCard(AccessibilityEvent event, boolean isVerbose) {
         try {
             File myFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/recorda_log.txt");
             toast(Environment.getExternalStorageDirectory().getAbsolutePath());
@@ -84,7 +89,24 @@ public class RecordAccessibilityService extends AccessibilityService {
             }
             FileOutputStream fOut = new FileOutputStream(myFile, true);
             OutputStreamWriter outWriter = new OutputStreamWriter(fOut);
-            outWriter.append(textToBeLogged+"\n");
+
+            if (isVerbose) {
+                outWriter.append("[class]:"+event.getClassName());
+                outWriter.append("\n");
+                outWriter.append("[source]:"+event.getSource());
+                outWriter.append("\n");
+                outWriter.append("[type]:"+AccessibilityEvent.eventTypeToString(event.getEventType()));
+                outWriter.append("\n");
+                outWriter.append("[desc]:"+event.getContentDescription());
+                outWriter.append("\n");
+                outWriter.append(event.toString());
+                outWriter.append("\n");
+                outWriter.append("---------------------");
+            } else {
+                outWriter.append(event.toString());
+            }
+
+            outWriter.append("\n");
             outWriter.close();
             fOut.close();
         } catch (Exception e) {
