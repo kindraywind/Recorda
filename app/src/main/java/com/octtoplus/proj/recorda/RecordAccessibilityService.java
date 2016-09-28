@@ -79,9 +79,10 @@ public class RecordAccessibilityService extends AccessibilityService {
             File myFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/recorda_log.txt");
             toast(Environment.getExternalStorageDirectory().getAbsolutePath());
             if (!myFile.exists()) {
+                toast("CREATE NEW FILE");
                 myFile.createNewFile();
             }
-            FileOutputStream fOut = new FileOutputStream(myFile);
+            FileOutputStream fOut = new FileOutputStream(myFile, true);
             OutputStreamWriter outWriter = new OutputStreamWriter(fOut);
             outWriter.append(textToBeLogged+"\n");
             outWriter.close();
