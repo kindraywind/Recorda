@@ -8,9 +8,15 @@ import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * Created by muangsiriworamet on 9/21/16.
@@ -28,7 +34,7 @@ public class RecordAccessibilityService extends AccessibilityService {
         
         switch(eventType) {
             case AccessibilityEvent.TYPE_VIEW_CLICKED:
-                eventText = "Clicked: ";
+                eventText = getJsonFromClickEvent(accessibilityEvent).toString();
                 break;
             case AccessibilityEvent.TYPE_VIEW_ACCESSIBILITY_FOCUSED:
                 eventText = "Focused: ";
@@ -40,12 +46,7 @@ public class RecordAccessibilityService extends AccessibilityService {
                 eventText = "Other: ";
                 break;
         }
-        
-        eventText = eventText + accessibilityEvent.getContentDescription();
-        Log.i(TAG, "Event: " + eventText);
-        Log.i(TAG, "a: "+accessibilityEvent.toString());
-        toast("Event:"+ eventText);
-        logToSdCard(accessibilityEvent, true);
+        logToSdCard(eventText);
 
         
     }
@@ -87,7 +88,39 @@ public class RecordAccessibilityService extends AccessibilityService {
         toast.show();
     }
 
-    public void logToSdCard(AccessibilityEvent event, boolean isVerbose) {
+    public JSONObject getJsonFromClickEvent(AccessibilityEvent event) {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("eventTime", Long.toString(event.getEventTime()));
+            json.put("packageName", event.getPackageName());
+            json.put("eventType", AccessibilityEvent.eventTypeToString(event.getEventType()));
+            json.put("className", event.getClassName());
+            json.put("eventText", getEventText(event));
+            json.put("isEnable", event.isEnabled());
+            json.put("isPassword", event.isPassword());
+            json.put("contentDescription", event.getContentDescription());
+            json.put("fromIndex", event.getFromIndex());
+            json.put("toIndex", event.getToIndex());
+            json.put("itemCount", event.getItemCount());
+            json.put("isChecked", event.isChecked());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return json;
+    }
+
+    public String logSelectOrFocus() {
+        return "";
+    }
+
+    public String logTextChange() {
+        return "";
+    }
+
+
+
+    public void logToSdCard(String eventStr) {
         try {
             File myFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/recorda_log.txt");
             toast(Environment.getExternalStorageDirectory().getAbsolutePath());
@@ -98,21 +131,7 @@ public class RecordAccessibilityService extends AccessibilityService {
             FileOutputStream fOut = new FileOutputStream(myFile, true);
             OutputStreamWriter outWriter = new OutputStreamWriter(fOut);
 
-            if (isVerbose) {
-                outWriter.append("[class]:"+event.getClassName());
-                outWriter.append("\n");
-                outWriter.append("[source]:"+event.getSource());
-                outWriter.append("\n");
-                outWriter.append("[type]:"+AccessibilityEvent.eventTypeToString(event.getEventType()));
-                outWriter.append("\n");
-                outWriter.append("[desc]:"+event.getContentDescription());
-                outWriter.append("\n");
-                outWriter.append(event.toString());
-                outWriter.append("\n");
-                outWriter.append("---------------------");
-            } else {
-                outWriter.append(event.toString());
-            }
+                outWriter.append(eventStr);
 
             outWriter.append("\n");
             outWriter.close();
@@ -120,5 +139,13 @@ public class RecordAccessibilityService extends AccessibilityService {
         } catch (Exception e) {
             toast(e.getMessage());
         }
+    }
+
+    private List<String> getEventText(AccessibilityEvent event) {
+        List<String> eventTextList = new ArrayList<String>();
+        for(CharSequence charSequence : event.getText()) {
+            eventTextList.add(charSequence.toString());
+        }
+        return eventTextList;
     }
 }
