@@ -156,6 +156,16 @@ public class RecordAccessibilityService extends AccessibilityService {
         return json;
     }
 
+    public JSONObject logWindowChange(AccessibilityEvent event) {
+        JSONObject json = new JSONObject();
+        try{
+            json.put("eventTime", Long.toString(event.getEventTime()));
+            json.put("eventType", AccessibilityEvent.eventTypeToString(event.getEventType()));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 
     public void logToSdCard(String eventStr) {
@@ -178,6 +188,7 @@ public class RecordAccessibilityService extends AccessibilityService {
             toast(e.getMessage());
         }
     }
+
 
     private List<String> getEventText(AccessibilityEvent event) {
         List<String> eventTextList = new ArrayList<String>();
