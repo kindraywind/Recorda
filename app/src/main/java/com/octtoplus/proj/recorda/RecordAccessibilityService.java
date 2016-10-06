@@ -37,10 +37,13 @@ public class RecordAccessibilityService extends AccessibilityService {
                 eventText = getJsonFromClickEvent(accessibilityEvent).toString();
                 break;
             case AccessibilityEvent.TYPE_VIEW_ACCESSIBILITY_FOCUSED:
-                eventText = "Focused: ";
+                eventText = getJsonFromSelectOrFocus(accessibilityEvent).toString();
                 break;
             case AccessibilityEvent.TYPE_VIEW_SCROLLED:
                 eventText = "Scrolled: ";
+                break;
+            case AccessibilityEvent.TYPE_WINDOWS_CHANGED;
+                eventText = getJsonFromWindowChange(accessibilityEvent).toString();
                 break;
             default:
                 eventText = "Other: ";
@@ -110,7 +113,7 @@ public class RecordAccessibilityService extends AccessibilityService {
         return json;
     }
 
-    public JSONObject logSelectOrFocus(AccessibilityEvent event) {
+    public JSONObject getJsonFromSelectOrFocus(AccessibilityEvent event) {
         JSONObject json = new JSONObject();
         try {
             json.put("eventTime", Long.toString(event.getEventTime()));
@@ -133,7 +136,7 @@ public class RecordAccessibilityService extends AccessibilityService {
         return json;
     }
 
-    public JSONObject logTextChange(AccessibilityEvent event) {
+    public JSONObject getJsonFromTextChange(AccessibilityEvent event) {
         JSONObject json = new JSONObject();
         try {
             json.put("eventTime", Long.toString(event.getEventTime()));
@@ -156,7 +159,7 @@ public class RecordAccessibilityService extends AccessibilityService {
         return json;
     }
 
-    public JSONObject logWindowChange(AccessibilityEvent event) {
+    public JSONObject getJsonFromWindowChange(AccessibilityEvent event) {
         JSONObject json = new JSONObject();
         try{
             json.put("eventTime", Long.toString(event.getEventTime()));
@@ -164,6 +167,7 @@ public class RecordAccessibilityService extends AccessibilityService {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        return json;
     }
 
 
