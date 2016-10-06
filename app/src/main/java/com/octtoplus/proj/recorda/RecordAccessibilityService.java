@@ -110,12 +110,50 @@ public class RecordAccessibilityService extends AccessibilityService {
         return json;
     }
 
-    public String logSelectOrFocus() {
-        return "";
+    public JSONObject logSelectOrFocus(AccessibilityEvent event) {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("eventTime", Long.toString(event.getEventTime()));
+            json.put("packageName", event.getPackageName());
+            json.put("eventType", AccessibilityEvent.eventTypeToString(event.getEventType()));
+            json.put("className", event.getClassName());
+            json.put("eventText", getEventText(event));
+            json.put("isEnable", event.isEnabled());
+            json.put("isPassword", event.isPassword());
+            json.put("contentDescription", event.getContentDescription());
+            json.put("fromIndex", event.getFromIndex());
+            json.put("toIndex", event.getToIndex());
+            json.put("itemCount", event.getItemCount());
+            json.put("currentItemIndex", event.getCurrentItemIndex());
+            json.put("isChecked", event.isChecked());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return json;
     }
 
-    public String logTextChange() {
-        return "";
+    public JSONObject logTextChange(AccessibilityEvent event) {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("eventTime", Long.toString(event.getEventTime()));
+            json.put("packageName", event.getPackageName());
+            json.put("eventType", AccessibilityEvent.eventTypeToString(event.getEventType()));
+            json.put("className", event.getClassName());
+            json.put("eventText", getEventText(event));
+            json.put("isEnable", event.isEnabled());
+            json.put("isPassword", event.isPassword());
+            json.put("contentDescription", event.getContentDescription());
+            json.put("fromIndex", event.getFromIndex());
+            json.put("addedCount", event.getAddedCount());
+            json.put("removedCount", event.getRemovedCount());
+            json.put("beforeText", event.getBeforeText());
+            json.put("isChecked", event.isChecked());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return json;
     }
 
 
