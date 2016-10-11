@@ -42,16 +42,24 @@ public class RecordAccessibilityService extends AccessibilityService {
             case AccessibilityEvent.TYPE_VIEW_SCROLLED:
                 eventText = "Scrolled: ";
                 break;
-            case AccessibilityEvent.TYPE_WINDOWS_CHANGED;
+            case AccessibilityEvent.TYPE_WINDOWS_CHANGED:
                 eventText = getJsonFromWindowChange(accessibilityEvent).toString();
                 break;
             default:
                 eventText = "Other: ";
                 break;
         }
+
         logToSdCard(eventText);
 
         
+    }
+
+    @Override
+    protected boolean onGesture(int gestureId) {
+        toast("gesture: "+gestureId);
+        logToSdCard("gesture: "+gestureId);
+        return super.onGesture(gestureId);
     }
 
     @Override
