@@ -40,19 +40,19 @@ public class RecordAccessibilityService extends AccessibilityService {
                 eventText = getJsonFromSelectOrFocus(accessibilityEvent).toString();
                 break;
             case AccessibilityEvent.TYPE_VIEW_SCROLLED:
-                eventText = "Scrolled: ";
+                eventText = getJsonFromScroll(accessibilityEvent).toString();
                 break;
             case AccessibilityEvent.TYPE_WINDOWS_CHANGED:
                 eventText = getJsonFromWindowChange(accessibilityEvent).toString();
                 break;
+            case AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED:
+                eventText = getJsonFromWindowStateChange(accessibilityEvent).toString();
+                break;
             default:
-                eventText = "Other: ";
+                eventText = getJsonFromOtherEvent(accessibilityEvent).toString();
                 break;
         }
-
         logToSdCard(eventText);
-
-        
     }
 
     @Override
@@ -65,6 +65,7 @@ public class RecordAccessibilityService extends AccessibilityService {
     @Override
     protected void onServiceConnected() {
         Log.i(TAG, "onServiceConnected: start");
+        toast("START RECORDA");
         //logToSdCard("Start recorda session");
 
         info.eventTypes = AccessibilityEvent.TYPE_VIEW_CLICKED |
@@ -79,7 +80,7 @@ public class RecordAccessibilityService extends AccessibilityService {
                 AccessibilityEvent.TYPE_WINDOWS_CHANGED;
 
         info.feedbackType = AccessibilityServiceInfo.FEEDBACK_GENERIC;
-        info.packageNames = new String[]{"com.octtoplus.proj.recorda"};
+        info.packageNames = new String[]{"com.octtoplus.proj.recorda", "com.poketutor.pokedex2"};
         info.notificationTimeout = 100;
 
         this.setServiceInfo(info);
@@ -144,6 +145,29 @@ public class RecordAccessibilityService extends AccessibilityService {
         return json;
     }
 
+    public JSONObject getJsonFromScroll(AccessibilityEvent event) {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("eventTime", Long.toString(event.getEventTime()));
+            json.put("packageName", event.getPackageName());
+            json.put("eventType", AccessibilityEvent.eventTypeToString(event.getEventType()));
+            json.put("className", event.getClassName());
+            json.put("eventText", getEventText(event));
+            json.put("isEnable", event.isEnabled());
+            json.put("isPassword", event.isPassword());
+            json.put("contentDescription", event.getContentDescription());
+            json.put("fromIndex", event.getFromIndex());
+            json.put("toIndex", event.getToIndex());
+            json.put("itemCount", event.getItemCount());
+            json.put("currentItemIndex", event.getCurrentItemIndex());
+            json.put("isChecked", event.isChecked());
+            json.put("scrollX", event.getScrollX());
+            json.put("scrollY", event.getScrollY());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return json;
+    }
     public JSONObject getJsonFromTextChange(AccessibilityEvent event) {
         JSONObject json = new JSONObject();
         try {
@@ -178,12 +202,38 @@ public class RecordAccessibilityService extends AccessibilityService {
         return json;
     }
 
+    public JSONObject getJsonFromWindowStateChange(AccessibilityEvent event) {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("eventTime", Long.toString(event.getEventTime()));
+            json.put("packageName", event.getPackageName());
+            json.put("eventType", AccessibilityEvent.eventTypeToString(event.getEventType()));
+            json.put("className", event.getClassName());
+            json.put("eventText", getEventText(event));
+            json.put("source",event.getSource());
+            json.put("isEnabled", event.isEnabled());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return json;
+    }
+
+    public JSONObject getJsonFromOtherEvent(AccessibilityEvent event) {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("eventTime", Long.toString(event.getEventTime()));
+            json.put("eventType", AccessibilityEvent.eventTypeToString(event.getEventType()));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return json;
+    }
+
 
 
     public void logToSdCard(String eventStr) {
         try {
             File myFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/recorda_log.txt");
-            toast(Environment.getExternalStorageDirectory().getAbsolutePath());
             if (!myFile.exists()) {
                 toast("CREATE NEW FILE");
                 myFile.createNewFile();
