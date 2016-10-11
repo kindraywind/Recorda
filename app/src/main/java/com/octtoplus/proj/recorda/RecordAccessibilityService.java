@@ -243,7 +243,7 @@ public class RecordAccessibilityService extends AccessibilityService {
 
                 outWriter.append(eventStr);
 
-            outWriter.append("\n");
+            outWriter.append(",\n");
             outWriter.close();
             fOut.close();
         } catch (Exception e) {
