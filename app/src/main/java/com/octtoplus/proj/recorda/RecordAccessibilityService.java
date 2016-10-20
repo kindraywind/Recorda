@@ -229,8 +229,6 @@ public class RecordAccessibilityService extends AccessibilityService {
         return json;
     }
 
-
-
     public void logToSdCard(String eventStr) {
         try {
             File myFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/recorda_log.txt");
