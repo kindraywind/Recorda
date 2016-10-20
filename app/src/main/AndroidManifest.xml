@@ -31,7 +31,8 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".SecondActivity"></activity>
+        <activity android:name=".SecondActivity" />
+        <activity android:name=".ThirdActivity"></activity>
     </application>
 
 </manifest>
