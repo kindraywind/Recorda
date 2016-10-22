@@ -94,7 +94,7 @@ class RecordAccessibilityService : AccessibilityService() {
                 put("itemCount", event.itemCount)
                 put("packageName", event.packageName)
                 put("toIndex", event.toIndex)
-                put("idName", event.source.viewIdResourceName)
+                put("resource-id", event.source.viewIdResourceName)
             }
 
     fun getJsonFromSelectOrFocus(event: AccessibilityEvent) =
@@ -112,7 +112,7 @@ class RecordAccessibilityService : AccessibilityService() {
                 put("itemCount", event.itemCount)
                 put("packageName", event.packageName)
                 put("toIndex", event.toIndex)
-                put("idName", event.source.viewIdResourceName)
+                put("resource-id", event.source.viewIdResourceName)
             }
 
     fun getJsonFromScroll(event: AccessibilityEvent) =
@@ -132,7 +132,7 @@ class RecordAccessibilityService : AccessibilityService() {
                 put("scrollX", event.scrollX)
                 put("scrollY", event.scrollY)
                 put("toIndex", event.toIndex)
-                put("idName", event.source.viewIdResourceName)
+                put("resource-id", event.source.viewIdResourceName)
             }
 
     fun getJsonFromTextChange(event: AccessibilityEvent) =
@@ -150,14 +150,14 @@ class RecordAccessibilityService : AccessibilityService() {
                 put("isPassword", event.isPassword)
                 put("packageName", event.packageName)
                 put("removedCount", event.removedCount)
-                put("idName", event.source.viewIdResourceName)
+                put("resource-id", event.source.viewIdResourceName)
             }
 
     fun getJsonFromWindowChange(event: AccessibilityEvent) =
             JSONObject().apply {
                 put("eventTime", java.lang.Long.toString(event.eventTime))
                 put("eventType", AccessibilityEvent.eventTypeToString(event.eventType))
-                put("idName", event.source.viewIdResourceName)
+                put("resource-id", event.source.viewIdResourceName)
             }
 
     fun getJsonFromWindowStateChange(event: AccessibilityEvent) =
@@ -168,14 +168,14 @@ class RecordAccessibilityService : AccessibilityService() {
                 put("eventType", AccessibilityEvent.eventTypeToString(event.eventType))
                 put("isEnabled", event.isEnabled)
                 put("packageName", event.packageName)
-                put("idName", event.source.viewIdResourceName)
+                put("resource-id", event.source.viewIdResourceName)
             }
 
     fun getJsonFromOtherEvent(event: AccessibilityEvent) =
             JSONObject().apply {
                 put("eventTime", java.lang.Long.toString(event.eventTime))
                 put("eventType", AccessibilityEvent.eventTypeToString(event.eventType))
-                put("idName", event.source.viewIdResourceName)
+                put("resource-id", event.source.viewIdResourceName)
             }
 
     fun logToSdCard(eventStr: String) {
