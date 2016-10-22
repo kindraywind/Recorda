@@ -3,6 +3,7 @@ package com.octtoplus.proj.recorda
 import android.accessibilityservice.AccessibilityService
 import android.accessibilityservice.AccessibilityServiceInfo
 import android.os.Environment
+import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 import android.widget.Toast
 import org.json.JSONObject
@@ -55,6 +56,9 @@ class RecordAccessibilityService : AccessibilityService() {
 
         info.eventTypes = events.reduce { reduced, value -> reduced or value }
         info.flags = flags.reduce { reduced, value -> reduced or value }
+
+        Log.e(TAG, info.eventTypes.toString())
+        Log.e(TAG, flags.toString())
 
         info.feedbackType = AccessibilityServiceInfo.FEEDBACK_GENERIC
         info.packageNames = arrayOf("com.octtoplus.proj.recorda", "com.poketutor.pokedex2")
@@ -176,9 +180,7 @@ class RecordAccessibilityService : AccessibilityService() {
 
     fun logToSdCard(eventStr: String) {
         val path = Environment.getExternalStorageDirectory().absolutePath + "/recorda_log.txt"
-        File(path).printWriter().use { out ->
-            out.println(eventStr + ",")
-        }
+        File(path).appendText(eventStr+",\n")
     }
 
     private fun getEventText(event: AccessibilityEvent): List<String> {
