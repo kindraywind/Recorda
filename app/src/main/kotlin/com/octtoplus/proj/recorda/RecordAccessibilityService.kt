@@ -25,12 +25,6 @@ class RecordAccessibilityService : AccessibilityService() {
         val eventType = accessibilityEvent.eventType
         var eventText: String? = null
 
-//        if (accessibilityEvent.source != null) {
-//            toast("Source: " + accessibilityEvent.source.toString())
-//            Log.e(TAG, accessibilityEvent.source.toString())
-//        } else {
-//        }
-
         when (eventType) {
             AccessibilityEvent.TYPE_VIEW_CLICKED -> eventText = getJsonFromClickEvent(accessibilityEvent).toString()
             AccessibilityEvent.TYPE_VIEW_ACCESSIBILITY_FOCUSED -> eventText = getJsonFromSelectOrFocus(accessibilityEvent).toString()
@@ -49,9 +43,7 @@ class RecordAccessibilityService : AccessibilityService() {
     }
 
     override fun onServiceConnected() {
-        Log.i(TAG, "onServiceConnected: start")
         toast("START RECORDA")
-        //logToSdCard("Start recorda session");
 
         info.eventTypes = AccessibilityEvent.TYPE_VIEW_CLICKED or
                 AccessibilityEvent.TYPE_VIEW_LONG_CLICKED or
@@ -186,7 +178,6 @@ class RecordAccessibilityService : AccessibilityService() {
         try {
             val myFile = File(Environment.getExternalStorageDirectory().absolutePath + "/recorda_log.txt")
             if (!myFile.exists()) {
-//                toast("CREATE NEW FILE")
                 myFile.createNewFile()
             }
             val fOut = FileOutputStream(myFile, true)
@@ -198,7 +189,6 @@ class RecordAccessibilityService : AccessibilityService() {
             outWriter.close()
             fOut.close()
         } catch (e: Exception) {
-//            toast(e.message.toString())
         }
 
     }
