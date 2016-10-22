@@ -2,16 +2,12 @@ package com.octtoplus.proj.recorda
 
 import android.accessibilityservice.AccessibilityService
 import android.accessibilityservice.AccessibilityServiceInfo
-import android.content.Context
 import android.os.Environment
-import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 import android.widget.Toast
 import org.json.JSONObject
 import java.io.File
-import java.io.FileOutputStream
-import java.io.OutputStreamWriter
-import java.util.*
+import java.util.ArrayList
 
 /**
  * Created by muangsiriworamet on 9/21/16.
@@ -45,15 +41,20 @@ class RecordAccessibilityService : AccessibilityService() {
     override fun onServiceConnected() {
         toast("START RECORDA")
 
-        info.eventTypes = AccessibilityEvent.TYPE_VIEW_CLICKED or
-                AccessibilityEvent.TYPE_VIEW_LONG_CLICKED or
-                AccessibilityEvent.TYPE_VIEW_SCROLLED or
-                AccessibilityEvent.TYPE_VIEW_SELECTED or
-                AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED or
-                AccessibilityEvent.TYPE_WINDOWS_CHANGED or
-                AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED
+        val events = listOf(AccessibilityEvent.TYPE_VIEW_CLICKED,
+                AccessibilityEvent.TYPE_VIEW_LONG_CLICKED,
+                AccessibilityEvent.TYPE_VIEW_SCROLLED,
+                AccessibilityEvent.TYPE_VIEW_SELECTED,
+                AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED,
+                AccessibilityEvent.TYPE_WINDOWS_CHANGED,
+                AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED)
 
-        info.flags = AccessibilityServiceInfo.DEFAULT or AccessibilityServiceInfo.FLAG_REPORT_VIEW_IDS or AccessibilityServiceInfo.FLAG_REQUEST_TOUCH_EXPLORATION_MODE
+        val flags = listOf(AccessibilityServiceInfo.DEFAULT,
+                AccessibilityServiceInfo.FLAG_REPORT_VIEW_IDS,
+                AccessibilityServiceInfo.FLAG_REQUEST_TOUCH_EXPLORATION_MODE)
+
+        info.eventTypes = events.reduce { reduced, value -> reduced or value }
+        info.flags = flags.reduce { reduced, value -> reduced or value }
 
         info.feedbackType = AccessibilityServiceInfo.FEEDBACK_GENERIC
         info.packageNames = arrayOf("com.octtoplus.proj.recorda", "com.poketutor.pokedex2")
@@ -91,7 +92,6 @@ class RecordAccessibilityService : AccessibilityService() {
                 put("toIndex", event.toIndex)
                 put("idName", event.source.viewIdResourceName)
             }
-
 
     fun getJsonFromSelectOrFocus(event: AccessibilityEvent) =
             JSONObject().apply {
@@ -175,24 +175,11 @@ class RecordAccessibilityService : AccessibilityService() {
             }
 
     fun logToSdCard(eventStr: String) {
-        try {
-            val myFile = File(Environment.getExternalStorageDirectory().absolutePath + "/recorda_log.txt")
-            if (!myFile.exists()) {
-                myFile.createNewFile()
-            }
-            val fOut = FileOutputStream(myFile, true)
-            val outWriter = OutputStreamWriter(fOut)
-
-            outWriter.append(eventStr)
-
-            outWriter.append(",\n")
-            outWriter.close()
-            fOut.close()
-        } catch (e: Exception) {
+        val path = Environment.getExternalStorageDirectory().absolutePath + "/recorda_log.txt"
+        File(path).printWriter().use { out ->
+            out.println(eventStr + ",")
         }
-
     }
-
 
     private fun getEventText(event: AccessibilityEvent): List<String> {
         val eventTextList = ArrayList<String>()
