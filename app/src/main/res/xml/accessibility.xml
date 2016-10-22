@@ -2,7 +2,7 @@
 <accessibility-service xmlns:android="http://schemas.android.com/apk/res/android"
     android:packageNames="com.octtoplus.proj.recorda, com.poketutor.pokedex2"
     android:accessibilityEventTypes="typeViewClicked|typeViewLongClicked|typeViewSelected|typeViewTextChanged|typeViewScrolled|typeWindowStateChanged|typeWindowsChanged"
-    android:accessibilityFlags="flagDefault|flagReportViewIds"
+    android:accessibilityFlags="flagDefault|flagReportViewIds|flagRequestTouchExplorationMode"
     android:accessibilityFeedbackType="feedbackGeneric"
     android:notificationTimeout="100"
     android:canRetrieveWindowContent="true"

@@ -2,6 +2,7 @@ package com.octtoplus.proj.recorda
 
 import android.accessibilityservice.AccessibilityService
 import android.accessibilityservice.AccessibilityServiceInfo
+import android.content.Context
 import android.os.Environment
 import android.util.Log
 import android.view.accessibility.AccessibilityEvent
@@ -24,11 +25,11 @@ class RecordAccessibilityService : AccessibilityService() {
         val eventType = accessibilityEvent.eventType
         var eventText: String? = null
 
-        if (accessibilityEvent.source != null) {
-            toast("Source: " + accessibilityEvent.source.toString())
-        } else {
-            toast("NULL")
-        }
+//        if (accessibilityEvent.source != null) {
+//            toast("Source: " + accessibilityEvent.source.toString())
+//            Log.e(TAG, accessibilityEvent.source.toString())
+//        } else {
+//        }
 
         when (eventType) {
             AccessibilityEvent.TYPE_VIEW_CLICKED -> eventText = getJsonFromClickEvent(accessibilityEvent).toString()
@@ -53,17 +54,14 @@ class RecordAccessibilityService : AccessibilityService() {
         //logToSdCard("Start recorda session");
 
         info.eventTypes = AccessibilityEvent.TYPE_VIEW_CLICKED or
-                //							AccessibilityEvent.TYPE_VIEW_CONTEXT_CLICKED |
                 AccessibilityEvent.TYPE_VIEW_LONG_CLICKED or
-                AccessibilityEvent.TYPE_VIEW_SELECTED or
-                //							AccessibilityEvent.TYPE_VIEW_FOCUSED |
-                AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED or
-                //							AccessibilityEvent.TYPE_VIEW_TEXT_SELECTION_CHANGED |
                 AccessibilityEvent.TYPE_VIEW_SCROLLED or
-                AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED or
-                AccessibilityEvent.TYPE_WINDOWS_CHANGED
+                AccessibilityEvent.TYPE_VIEW_SELECTED or
+                AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED or
+                AccessibilityEvent.TYPE_WINDOWS_CHANGED or
+                AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED
 
-        info.flags = AccessibilityServiceInfo.DEFAULT or AccessibilityServiceInfo.FLAG_REPORT_VIEW_IDS
+        info.flags = AccessibilityServiceInfo.DEFAULT or AccessibilityServiceInfo.FLAG_REPORT_VIEW_IDS or AccessibilityServiceInfo.FLAG_REQUEST_TOUCH_EXPLORATION_MODE
 
         info.feedbackType = AccessibilityServiceInfo.FEEDBACK_GENERIC
         info.packageNames = arrayOf("com.octtoplus.proj.recorda", "com.poketutor.pokedex2")
@@ -99,6 +97,7 @@ class RecordAccessibilityService : AccessibilityService() {
                 put("itemCount", event.itemCount)
                 put("packageName", event.packageName)
                 put("toIndex", event.toIndex)
+                put("idName", event.source.viewIdResourceName)
             }
 
 
@@ -117,6 +116,7 @@ class RecordAccessibilityService : AccessibilityService() {
                 put("itemCount", event.itemCount)
                 put("packageName", event.packageName)
                 put("toIndex", event.toIndex)
+                put("idName", event.source.viewIdResourceName)
             }
 
     fun getJsonFromScroll(event: AccessibilityEvent) =
@@ -136,6 +136,7 @@ class RecordAccessibilityService : AccessibilityService() {
                 put("scrollX", event.scrollX)
                 put("scrollY", event.scrollY)
                 put("toIndex", event.toIndex)
+                put("idName", event.source.viewIdResourceName)
             }
 
     fun getJsonFromTextChange(event: AccessibilityEvent) =
@@ -153,12 +154,14 @@ class RecordAccessibilityService : AccessibilityService() {
                 put("isPassword", event.isPassword)
                 put("packageName", event.packageName)
                 put("removedCount", event.removedCount)
+                put("idName", event.source.viewIdResourceName)
             }
 
     fun getJsonFromWindowChange(event: AccessibilityEvent) =
             JSONObject().apply {
                 put("eventTime", java.lang.Long.toString(event.eventTime))
                 put("eventType", AccessibilityEvent.eventTypeToString(event.eventType))
+                put("idName", event.source.viewIdResourceName)
             }
 
     fun getJsonFromWindowStateChange(event: AccessibilityEvent) =
@@ -169,20 +172,21 @@ class RecordAccessibilityService : AccessibilityService() {
                 put("eventType", AccessibilityEvent.eventTypeToString(event.eventType))
                 put("isEnabled", event.isEnabled)
                 put("packageName", event.packageName)
-                put("source", event.source)
+                put("idName", event.source.viewIdResourceName)
             }
 
     fun getJsonFromOtherEvent(event: AccessibilityEvent) =
             JSONObject().apply {
                 put("eventTime", java.lang.Long.toString(event.eventTime))
                 put("eventType", AccessibilityEvent.eventTypeToString(event.eventType))
+                put("idName", event.source.viewIdResourceName)
             }
 
     fun logToSdCard(eventStr: String) {
         try {
             val myFile = File(Environment.getExternalStorageDirectory().absolutePath + "/recorda_log.txt")
             if (!myFile.exists()) {
-                toast("CREATE NEW FILE")
+//                toast("CREATE NEW FILE")
                 myFile.createNewFile()
             }
             val fOut = FileOutputStream(myFile, true)
@@ -194,7 +198,7 @@ class RecordAccessibilityService : AccessibilityService() {
             outWriter.close()
             fOut.close()
         } catch (e: Exception) {
-            toast(e.message.toString())
+//            toast(e.message.toString())
         }
 
     }
