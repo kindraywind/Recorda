@@ -2,19 +2,15 @@ package com.octtoplus.proj.recorda
 
 import android.accessibilityservice.AccessibilityService
 import android.accessibilityservice.AccessibilityServiceInfo
-import android.content.Context
 import android.os.Environment
 import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 import android.widget.Toast
-
-import org.json.JSONException
 import org.json.JSONObject
-
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStreamWriter
-import java.util.ArrayList
+import java.util.*
 
 /**
  * Created by muangsiriworamet on 9/21/16.
@@ -27,6 +23,12 @@ class RecordAccessibilityService : AccessibilityService() {
     override fun onAccessibilityEvent(accessibilityEvent: AccessibilityEvent) {
         val eventType = accessibilityEvent.eventType
         var eventText: String? = null
+
+        if (accessibilityEvent.source != null) {
+            toast("Source: " + accessibilityEvent.source.toString())
+        } else {
+            toast("NULL")
+        }
 
         when (eventType) {
             AccessibilityEvent.TYPE_VIEW_CLICKED -> eventText = getJsonFromClickEvent(accessibilityEvent).toString()
@@ -60,6 +62,8 @@ class RecordAccessibilityService : AccessibilityService() {
                 AccessibilityEvent.TYPE_VIEW_SCROLLED or
                 AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED or
                 AccessibilityEvent.TYPE_WINDOWS_CHANGED
+
+        info.flags = AccessibilityServiceInfo.DEFAULT or AccessibilityServiceInfo.FLAG_REPORT_VIEW_IDS
 
         info.feedbackType = AccessibilityServiceInfo.FEEDBACK_GENERIC
         info.packageNames = arrayOf("com.octtoplus.proj.recorda", "com.poketutor.pokedex2")
