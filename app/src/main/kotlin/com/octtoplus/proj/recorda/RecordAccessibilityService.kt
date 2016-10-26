@@ -7,8 +7,6 @@ import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 import android.widget.Toast
 import org.json.JSONObject
-import java.io.File
-import java.util.ArrayList
 
 /**
  * Created by muangsiriworamet on 9/21/16.
@@ -20,8 +18,8 @@ class RecordAccessibilityService : AccessibilityService() {
 
     override fun onAccessibilityEvent(accessibilityEvent: AccessibilityEvent) {
         val eventType = accessibilityEvent.eventType
-        var eventText: String? = null
 
+        val eventText: String?
         when (eventType) {
             AccessibilityEvent.TYPE_VIEW_CLICKED -> eventText = getJsonFromClickEvent(accessibilityEvent).toString()
             AccessibilityEvent.TYPE_VIEW_ACCESSIBILITY_FOCUSED -> eventText = getJsonFromSelectOrFocus(accessibilityEvent).toString()
@@ -30,6 +28,7 @@ class RecordAccessibilityService : AccessibilityService() {
             AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED -> eventText = getJsonFromWindowStateChange(accessibilityEvent).toString()
             else -> eventText = getJsonFromOtherEvent(accessibilityEvent).toString()
         }
+
         logToSdCard(eventText)
     }
 
@@ -172,26 +171,21 @@ class RecordAccessibilityService : AccessibilityService() {
             }
 
     fun getJsonFromOtherEvent(event: AccessibilityEvent) =
-            JSONObject().apply {
-                put("eventTime", java.lang.Long.toString(event.eventTime))
-                put("eventType", AccessibilityEvent.eventTypeToString(event.eventType))
-                put("resource-id", event.source.viewIdResourceName)
+            JSON.create {
+                eventTime = event.eventTime
+                eventType = AccessibilityEvent.eventTypeToString(event.eventType)
+                resourceIdName = event.source.viewIdResourceName
             }
 
     fun logToSdCard(eventStr: String) {
-        val path = Environment.getExternalStorageDirectory().absolutePath + "/recorda_log.txt"
-        File(path).appendText(eventStr+",\n")
+        val file = Environment.getExternalStorageDirectory().resolve("recorda_log.txt")
+        file.appendText(eventStr + ",\n")
     }
 
-    private fun getEventText(event: AccessibilityEvent): List<String> {
-        val eventTextList = ArrayList<String>()
-        for (charSequence in event.text) {
-            eventTextList.add(charSequence.toString())
-        }
-        return eventTextList
-    }
+    private fun getEventText(event: AccessibilityEvent) = event.text.map { it.toString() }
 
     companion object {
-        private val TAG = "RecService"
+        private val TAG = RecordAccessibilityService::class.java.simpleName
     }
+
 }
