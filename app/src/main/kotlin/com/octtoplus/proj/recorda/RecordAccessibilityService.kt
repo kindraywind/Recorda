@@ -6,7 +6,6 @@ import android.os.Environment
 import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 import android.widget.Toast
-import org.json.JSONObject
 
 /**
  * Created by muangsiriworamet on 9/21/16.
@@ -80,94 +79,94 @@ class RecordAccessibilityService : AccessibilityService() {
     }
 
     fun getJsonFromClickEvent(event: AccessibilityEvent) =
-            JSONObject().apply {
-                put("className", event.className)
-                put("contentDescription", event.contentDescription)
-                put("eventText", getEventText(event))
-                put("eventTime", java.lang.Long.toString(event.eventTime))
-                put("eventType", AccessibilityEvent.eventTypeToString(event.eventType))
-                put("fromIndex", event.fromIndex)
-                put("isChecked", event.isChecked)
-                put("isEnable", event.isEnabled)
-                put("isPassword", event.isPassword)
-                put("itemCount", event.itemCount)
-                put("packageName", event.packageName)
-                put("toIndex", event.toIndex)
-                put("resource-id", event.source.viewIdResourceName)
+            JSON.create {
+                className = event.className
+                contentDescription = event.contentDescription
+                currentItemIndex = event.currentItemIndex
+                eventText = getEventText(event).toString()
+                eventTime = event.eventTime
+                eventType = AccessibilityEvent.eventTypeToString(event.eventType)
+                fromIndex = event.fromIndex
+                isChecked = event.isChecked
+                isEnable = event.isScrollable
+                isPassword = event.isPassword
+                itemCount = event.itemCount
+                packageName = event.packageName
+                toIndex = event.toIndex
+                resource_id = event.source.viewIdResourceName
             }
 
     fun getJsonFromSelectOrFocus(event: AccessibilityEvent) =
-            JSONObject().apply {
-                put("className", event.className)
-                put("contentDescription", event.contentDescription)
-                put("currentItemIndex", event.currentItemIndex)
-                put("eventText", getEventText(event))
-                put("eventTime", java.lang.Long.toString(event.eventTime))
-                put("eventType", AccessibilityEvent.eventTypeToString(event.eventType))
-                put("fromIndex", event.fromIndex)
-                put("isChecked", event.isChecked)
-                put("isEnable", event.isEnabled)
-                put("isPassword", event.isPassword)
-                put("itemCount", event.itemCount)
-                put("packageName", event.packageName)
-                put("toIndex", event.toIndex)
-                put("resource-id", event.source.viewIdResourceName)
+            JSON.create {
+                className = event.className
+                contentDescription = event.contentDescription
+                currentItemIndex = event.currentItemIndex
+                eventText = getEventText(event).toString()
+                eventTime = event.eventTime
+                eventType = AccessibilityEvent.eventTypeToString(event.eventType)
+                fromIndex = event.fromIndex
+                isChecked = event.isChecked
+                isEnable = event.isScrollable
+                isPassword = event.isPassword
+                itemCount = event.itemCount
+                packageName = event.packageName
+                toIndex = event.toIndex
+                resource_id = event.source.viewIdResourceName
             }
 
     fun getJsonFromScroll(event: AccessibilityEvent) =
-            JSONObject().apply {
-                put("className", event.className)
-                put("contentDescription", event.contentDescription)
-                put("currentItemIndex", event.currentItemIndex)
-                put("eventText", getEventText(event))
-                put("eventTime", java.lang.Long.toString(event.eventTime))
-                put("eventType", AccessibilityEvent.eventTypeToString(event.eventType))
-                put("fromIndex", event.fromIndex)
-                put("isChecked", event.isChecked)
-                put("isEnable", event.isEnabled)
-                put("isPassword", event.isPassword)
-                put("itemCount", event.itemCount)
-                put("packageName", event.packageName)
-                put("scrollX", event.scrollX)
-                put("scrollY", event.scrollY)
-                put("toIndex", event.toIndex)
-                put("resource-id", event.source.viewIdResourceName)
+            JSON.create {
+                className = event.className
+                contentDescription = event.contentDescription
+                currentItemIndex = event.currentItemIndex
+                eventText = getEventText(event).toString()
+                eventTime = event.eventTime
+                eventType = AccessibilityEvent.eventTypeToString(event.eventType)
+                fromIndex = event.fromIndex
+                isChecked = event.isChecked
+                isEnable = event.isScrollable
+                isPassword = event.isPassword
+                packageName = event.packageName
+                scrollX = event.scrollX
+                scrollY = event.scrollY
+                toIndex = event.toIndex
+                resource_id = event.source.viewIdResourceName
             }
 
     fun getJsonFromTextChange(event: AccessibilityEvent) =
-            JSONObject().apply {
-                put("addedCount", event.addedCount)
-                put("beforeText", event.beforeText)
-                put("className", event.className)
-                put("contentDescription", event.contentDescription)
-                put("eventText", getEventText(event))
-                put("eventTime", java.lang.Long.toString(event.eventTime))
-                put("eventType", AccessibilityEvent.eventTypeToString(event.eventType))
-                put("fromIndex", event.fromIndex)
-                put("isChecked", event.isChecked)
-                put("isEnable", event.isEnabled)
-                put("isPassword", event.isPassword)
-                put("packageName", event.packageName)
-                put("removedCount", event.removedCount)
-                put("resource-id", event.source.viewIdResourceName)
+            JSON.create {
+                addedCount = event.addedCount
+                beforeText = event.beforeText
+                className = event.className
+                contentDescription = event.contentDescription
+                eventText = getEventText(event).toString()
+                eventTime = event.eventTime
+                eventType = AccessibilityEvent.eventTypeToString(event.eventType)
+                fromIndex = event.fromIndex
+                isChecked = event.isChecked
+                isEnable = event.isScrollable
+                isPassword = event.isPassword
+                packageName = event.packageName
+                removedCount = event.removedCount
+                resource_id = event.source.viewIdResourceName
             }
 
     fun getJsonFromWindowChange(event: AccessibilityEvent) =
-            JSONObject().apply {
-                put("eventTime", java.lang.Long.toString(event.eventTime))
-                put("eventType", AccessibilityEvent.eventTypeToString(event.eventType))
-                put("resource-id", event.source.viewIdResourceName)
+            JSON.create {
+                eventTime = event.eventTime
+                eventType = AccessibilityEvent.eventTypeToString(event.eventType)
+                resourceIdName = event.source.viewIdResourceName
             }
 
     fun getJsonFromWindowStateChange(event: AccessibilityEvent) =
-            JSONObject().apply {
-                put("className", event.className)
-                put("eventText", getEventText(event))
-                put("eventTime", event.eventTime.toString())
-                put("eventType", AccessibilityEvent.eventTypeToString(event.eventType))
-                put("isEnabled", event.isEnabled)
-                put("packageName", event.packageName)
-                put("resource-id", event.source.viewIdResourceName)
+            JSON.create {
+                className = event.className
+                eventText = getEventText(event).toString()
+                eventTime = event.eventTime
+                eventType = AccessibilityEvent.eventTypeToString(event.eventType)
+                isEnable = event.isScrollable
+                packageName = event.packageName
+                resource_id = event.source.viewIdResourceName
             }
 
     fun getJsonFromOtherEvent(event: AccessibilityEvent) =
