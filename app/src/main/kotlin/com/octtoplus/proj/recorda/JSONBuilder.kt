@@ -19,6 +19,14 @@ class JSON private constructor() {
         var eventTime: Long? = null
         var eventType: CharSequence? = null
         var resourceIdName: CharSequence? = null
+        var fromIndex: Int? = null
+        var isChecked: Boolean? = null
+        var isEnable: Boolean? = null
+        var isPassword: Boolean? = null
+        var itemCount: Int? = null
+        var packageName: CharSequence? = null
+        var toIndex: Int? = null
+        var resource_id: CharSequence? = null
 
         fun className(block: JSONBuilder.() -> CharSequence) = apply { className = block() }
 
@@ -66,6 +74,30 @@ fun JSONObject.build(builder: JSON.JSONBuilder): JSONObject {
             put("eventType", it.toString())
         }
         builder.resourceIdName?.let {
+            put("resource-id", it.toString())
+        }
+        builder.fromIndex?.let {
+            put("fromIndex", it.toString())
+        }
+        builder.isChecked?.let {
+            put("isChecked", it.toString())
+        }
+        builder.isEnable?.let {
+            put("isEnable", it.toString())
+        }
+        builder.isPassword?.let {
+            put("isPassword", it.toString())
+        }
+        builder.itemCount?.let {
+            put("itemCount", it.toString())
+        }
+        builder.packageName?.let {
+            put("packageName", it.toString())
+        }
+        builder.toIndex?.let{
+            put("toIndex", it.toString())
+        }
+        builder.resource_id?.let {
             put("resource-id", it.toString())
         }
     }
