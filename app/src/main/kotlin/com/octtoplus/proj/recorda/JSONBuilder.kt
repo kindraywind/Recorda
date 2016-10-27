@@ -14,8 +14,12 @@ class JSON private constructor() {
             init()
         }
 
+        var addedCount: Int? = null
+        var beforeText: CharSequence? = null
         var className: CharSequence? = null
         var contentDescription: CharSequence? = null
+        var currentItemIndex: Int? = null
+        var eventText: CharSequence? = null
         var eventTime: Long? = null
         var eventType: CharSequence? = null
         var resourceIdName: CharSequence? = null
@@ -25,7 +29,10 @@ class JSON private constructor() {
         var isPassword: Boolean? = null
         var itemCount: Int? = null
         var packageName: CharSequence? = null
+        var scrollX: Int? = null
+        var scrollY: Int? = null
         var toIndex: Int? = null
+        var removedCount: Int? = null
         var resource_id: CharSequence? = null
 
         fun className(block: JSONBuilder.() -> CharSequence) = apply { className = block() }
@@ -61,11 +68,23 @@ class JSON private constructor() {
 
 fun JSONObject.build(builder: JSON.JSONBuilder): JSONObject {
     apply {
+        builder.addedCount?.let {
+            put("addedCount", it.toString())
+        }
+        builder.beforeText?.let {
+            put("beforeText", it.toString())
+        }
         builder.className?.let {
             put("className", it.toString())
         }
         builder.contentDescription?.let {
             put("contentDescription", it.toString())
+        }
+        builder.currentItemIndex?.let {
+            put("currentItemIndex", it.toString())
+        }
+        builder.eventText?.let {
+            put("eventText", it.toString())
         }
         builder.eventTime?.let {
             put("eventTime", it.toString())
@@ -94,8 +113,17 @@ fun JSONObject.build(builder: JSON.JSONBuilder): JSONObject {
         builder.packageName?.let {
             put("packageName", it.toString())
         }
+        builder.scrollX?.let {
+            put("scrollX", it.toString())
+        }
+        builder.scrollY.let {
+            put("scrollY", it.toString())
+        }
         builder.toIndex?.let{
             put("toIndex", it.toString())
+        }
+        builder.removedCount?.let {
+            put("removedCount", it.toString())
         }
         builder.resource_id?.let {
             put("resource-id", it.toString())
