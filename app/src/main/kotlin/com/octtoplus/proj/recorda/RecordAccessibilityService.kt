@@ -4,6 +4,7 @@ import android.accessibilityservice.AccessibilityService
 import android.accessibilityservice.AccessibilityServiceInfo
 import android.os.Environment
 import android.util.Log
+import android.view.KeyEvent
 import android.view.accessibility.AccessibilityEvent
 import android.widget.Toast
 
@@ -25,10 +26,18 @@ class RecordAccessibilityService : AccessibilityService() {
             AccessibilityEvent.TYPE_VIEW_SCROLLED -> eventText = getJsonFromScroll(accessibilityEvent).toString()
             AccessibilityEvent.TYPE_WINDOWS_CHANGED -> eventText = getJsonFromWindowChange(accessibilityEvent).toString()
             AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED -> eventText = getJsonFromWindowStateChange(accessibilityEvent).toString()
+            AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED -> eventText = getJsonFromTextChange(accessibilityEvent).toString()
             else -> eventText = getJsonFromOtherEvent(accessibilityEvent).toString()
         }
+//        toast(eventText)
 
         logToSdCard(eventText)
+    }
+
+    override fun onKeyEvent(event: KeyEvent?): Boolean {
+//        toast(event.toString())
+//        Log.e("ONKEYEVENT", "ONKEYEVENTTTTTT")
+        return super.onKeyEvent(event)
     }
 
     override fun onGesture(gestureId: Int): Boolean {
@@ -39,6 +48,7 @@ class RecordAccessibilityService : AccessibilityService() {
 
     override fun onServiceConnected() {
         toast("START RECORDA")
+        logToSdCard("-------------------------------------------\n")
 
         val events = listOf(AccessibilityEvent.TYPE_VIEW_CLICKED,
                 AccessibilityEvent.TYPE_VIEW_LONG_CLICKED,
@@ -50,6 +60,7 @@ class RecordAccessibilityService : AccessibilityService() {
 
         val flags = listOf(AccessibilityServiceInfo.DEFAULT,
                 AccessibilityServiceInfo.FLAG_REPORT_VIEW_IDS,
+                AccessibilityServiceInfo.FLAG_REQUEST_FILTER_KEY_EVENTS,
                 AccessibilityServiceInfo.FLAG_REQUEST_TOUCH_EXPLORATION_MODE)
 
         info.eventTypes = events.reduce { reduced, value -> reduced or value }
@@ -59,7 +70,7 @@ class RecordAccessibilityService : AccessibilityService() {
         Log.e(TAG, flags.toString())
 
         info.feedbackType = AccessibilityServiceInfo.FEEDBACK_GENERIC
-        info.packageNames = arrayOf("com.octtoplus.proj.recorda", "com.poketutor.pokedex2")
+//        info.packageNames = arrayOf("com.octtoplus.proj.recorda", "com.poketutor.pokedex2, com.talzz.datadex")
         info.notificationTimeout = 100
 
         this.serviceInfo = info
@@ -93,7 +104,7 @@ class RecordAccessibilityService : AccessibilityService() {
                 itemCount = event.itemCount
                 packageName = event.packageName
                 toIndex = event.toIndex
-                resource_id = event.source.viewIdResourceName
+                resource_id = if(event.source == null)"noneId" else event.source.viewIdResourceName
             }
 
     fun getJsonFromSelectOrFocus(event: AccessibilityEvent) =
@@ -111,7 +122,7 @@ class RecordAccessibilityService : AccessibilityService() {
                 itemCount = event.itemCount
                 packageName = event.packageName
                 toIndex = event.toIndex
-                resource_id = event.source.viewIdResourceName
+                resource_id = if(event.source == null)"noneId" else event.source.viewIdResourceName
             }
 
     fun getJsonFromScroll(event: AccessibilityEvent) =
@@ -130,7 +141,7 @@ class RecordAccessibilityService : AccessibilityService() {
                 scrollX = event.scrollX
                 scrollY = event.scrollY
                 toIndex = event.toIndex
-                resource_id = event.source.viewIdResourceName
+                resource_id = if(event.source == null)"noneId" else event.source.viewIdResourceName
             }
 
     fun getJsonFromTextChange(event: AccessibilityEvent) =
@@ -148,14 +159,14 @@ class RecordAccessibilityService : AccessibilityService() {
                 isPassword = event.isPassword
                 packageName = event.packageName
                 removedCount = event.removedCount
-                resource_id = event.source.viewIdResourceName
+                resource_id = if(event.source == null)"noneID" else event.source.viewIdResourceName
             }
 
     fun getJsonFromWindowChange(event: AccessibilityEvent) =
             JSON.create {
                 eventTime = event.eventTime
                 eventType = AccessibilityEvent.eventTypeToString(event.eventType)
-                resourceIdName = event.source.viewIdResourceName
+                resource_id = if(event.source == null)"noneID" else event.source.viewIdResourceName
             }
 
     fun getJsonFromWindowStateChange(event: AccessibilityEvent) =
@@ -166,14 +177,16 @@ class RecordAccessibilityService : AccessibilityService() {
                 eventType = AccessibilityEvent.eventTypeToString(event.eventType)
                 isEnable = event.isScrollable
                 packageName = event.packageName
-                resource_id = event.source.viewIdResourceName
+                resource_id = if(event.source == null)"noneId" else event.source.viewIdResourceName
             }
 
     fun getJsonFromOtherEvent(event: AccessibilityEvent) =
             JSON.create {
                 eventTime = event.eventTime
+                eventText = getEventText(event).toString()
                 eventType = AccessibilityEvent.eventTypeToString(event.eventType)
-                resourceIdName = event.source.viewIdResourceName
+                className = event.className
+                resource_id = if(event.source == null)"noneId" else event.source.viewIdResourceName
             }
 
     fun logToSdCard(eventStr: String) {
