@@ -1,7 +1,7 @@
 # Recorda
 ### A realtime usage recording service for Android application.
 ----------
-###About
+### About
 **Recorda** allows you to monitor and record the application usage in the background while it is being used.
 It runs in the background
 and receives callbacks from the system when AccessibilityEvents are fired. Such events
